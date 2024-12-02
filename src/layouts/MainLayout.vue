@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="cheader">
-      <q-toolbar class="bg-yellow">
+    <q-header class="q-header q-layout__section--marginal fixed-top" style="height: auto;">
+      <q-toolbar class="row no-wrap items-center bg-yellow" role="toolbar">
         <div class="row items-center justify-start full-width">
           <div class="col-md-2 col-6">
             <router-link to="/">
@@ -13,47 +13,20 @@
               />
             </router-link>
           </div>
-          <!-- col -->
-          <div class="col-4 gt-sm">
-            <div class="q-pa-md">
-              <q-input
-                class="text-search"
-                outlined
-                rounded
-                v-model="q"
-                :label="$t('Search')"
-                dense
-                bg-color="white"
-                label-color="grey"
-                :loading="awaitingSearch"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="ion-search" />
-                </template>
-              </q-input>
-            </div>
-          </div>
-          <!-- col -->
-          <div class="col-6 gt-sm">
+          <!-- Rest of the existing header content -->
+          <div class="col-10 gt-sm">
             <div class="column items-end">
               <template v-if="!is_login">
                 <q-btn-group outline>
-                  <q-btn :label="$t('Menu')" to="/menu" />
                   <q-btn
                     v-if="SettingsStore.booking_enabled"
                     :label="$t('Reservation')"
                     to="/reservation"
                   />
-                  <q-btn v-else label="Orders" to="/orders" />
                   <q-btn :label="$t('Login')" to="/login" />
-                  <q-btn :label="$t('About')" to="/about" />
                   <template v-if="SettingsStore.multicurrency_enabled">
                     <CurrencySelections ref="currency"></CurrencySelections>
                   </template>
-
-                  <!-- <q-btn  @click="this.rtl=!this.rtl" >
-                    <q-icon :name="this.rtl?'format_textdirection_l_to_r':'format_textdirection_r_to_l'" />
-                  </q-btn> -->
 
                   <LanguageSelection
                     v-if="SettingsStore.enabled_language"
@@ -72,14 +45,11 @@
 
               <template v-else>
                 <q-btn-group outline>
-                  <q-btn :label="$t('Menu')" to="/menu" />
                   <q-btn
                     v-if="SettingsStore.booking_enabled"
                     :label="$t('Reservation')"
                     to="/reservation"
                   />
-                  <q-btn v-else label="Orders" to="/orders" />
-                  <q-btn :label="$t('About')" to="/about" />
 
                   <template v-if="SettingsStore.multicurrency_enabled">
                     <CurrencySelections ref="currency"></CurrencySelections>
@@ -90,9 +60,6 @@
                     @after-selectlanguage="afterSelectlanguage"
                     ref="language_selection"
                   ></LanguageSelection>
-                  <!-- <q-btn  @click="this.rtl=!this.rtl"  style="padding: 4px 6px">
-                    <q-icon :name="this.rtl?'format_textdirection_r_to_l':'format_textdirection_l_to_r'" />
-                  </q-btn> -->
                   <q-btn style="padding: 4px 3px">
                     <q-chip style="margin: 0" color="grey-2">
                       <q-avatar size="sm">
@@ -193,9 +160,6 @@
                   ref="language_selection"
                 >
                 </LanguageSelection>
-                <!-- <q-btn  @click="this.rtl=!this.rtl" unelevated >
-                    <q-icon :name="this.rtl?'format_textdirection_l_to_r':'format_textdirection_r_to_l'" />
-                </q-btn> -->
                 <template v-if="!this.$q.screen.lt.md">
                   <q-btn to="/cart">
                     <q-icon name="img:shopping-bag.svg" />
@@ -224,8 +188,9 @@
         :breakpoint="sm"
         bordered
         :overlay="is_overlay"
+         class="cart-drawer"
       >
-        <q-scroll-area class="fit">
+        <q-scroll-area class="fit cart-scroll">
           <div class="q-pa-md" style="padding-bottom: 100px">
             <CartDrawer
               ref="cart"
@@ -251,22 +216,6 @@
         content-class="qtabs-modified"
       >
         <q-route-tab name="home" icon="o_home" :label="$t('Home')" no-caps to="/home" />
-
-        <q-route-tab
-          name="menu"
-          icon="o_lunch_dining"
-          :label="$t('Menu')"
-          no-caps
-          to="/menu"
-        />
-
-        <q-route-tab
-          name="browse"
-          icon="o_manage_search"
-          :label="$t('Browse')"
-          no-caps
-          to="/search"
-        />
         <q-route-tab
           v-if="SettingsStore.booking_enabled"
           name="table"
@@ -274,14 +223,6 @@
           :label="$t('Table')"
           no-caps
           to="/reservation"
-        />
-        <q-route-tab
-          v-else
-          name="orders"
-          icon="o_receipt_long"
-          :label="$t('Orders')"
-          no-caps
-          to="/orders"
         />
         <q-route-tab
           name="account"
@@ -295,6 +236,7 @@
     <!-- Mobile menu footer -->
 
     <q-page-container>
+
       <router-view />
 
       <template v-if="this.$q.screen.lt.md && this.$route.name == 'menu'">
@@ -320,6 +262,92 @@
       </template>
     </q-page-container>
 
+    <!-- About Us Section -->
+    <div class="cfooter row justify-center q-pa-md gt-xs" v-if="!loading && hasData">
+      <div class="col-12">
+        <div class="text-left">
+          <h4 class="no-margin text-weight-bold q-pb-sm">{{ $t("About Us") }}</h4>
+        </div>
+        <q-card class="q-card1" flat>
+          <q-card-section>
+            <div class="row items-start q-mb-lg">
+              <div v-if="$q.screen.gt.sm" class="col-1">
+                <q-icon name="las la-info-circle" size="md" />
+              </div>
+              <div class="col">
+                <h5 class="q-ma-none">{{ aboutData.data.few_words }}</h5>
+                <div class="q-ma-md"></div>
+                <span
+                  class="text-weight-light"
+                  v-html="aboutData.data.short_description"
+                ></span>
+              </div>
+            </div>
+            <!-- row -->
+
+            <div class="row items-start q-mb-lg">
+              <div v-if="$q.screen.gt.sm" class="col-1">
+                <q-icon name="las la-map-marker-alt" size="md" />
+              </div>
+              <div class="col">
+                <h5 class="q-ma-none">{{ $t("Address") }}</h5>
+                <div class="q-ma-md"></div>
+                <div class="row justify-between items-center">
+                  <div class="text-weight-light">{{ aboutData.data.merchant_address }}</div>
+
+                </div>
+              </div>
+            </div>
+            <!-- row -->
+
+            <div class="row items-start q-mb-lg">
+              <div v-if="$q.screen.gt.sm" class="col-1">
+                <q-icon name="las la-clock" size="md" />
+              </div>
+              <div class="col">
+                <h5 class="q-ma-none">{{ $t("Opening hours") }}</h5>
+                <div class="q-ma-md"></div>
+
+                <q-list>
+                  <q-expansion-item
+                    expand-separator
+                    :label="$t('Today')"
+                    :caption="aboutData.open_at"
+                  >
+                    <q-card class="text-weight-light">
+                      <q-card-section>
+                        <div v-for="items in aboutData.opening_hours" :key="items" class="row">
+                          <div class="col text-capitalize">{{ items.value }}</div>
+                          <div class="col">
+                            {{ items.start_time }} - {{ items.end_time }}
+                          </div>
+                        </div>
+                      </q-card-section>
+                    </q-card>
+                  </q-expansion-item>
+                </q-list>
+              </div>
+            </div>
+            <!-- row -->
+            <!-- row -->
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <q-dialog v-model="carousel">
+      <q-card style="width: 700px; max-width: 80vw; min-height: 30vw">
+        <q-card-section v-if="!loading && hasData">
+          <q-carousel animated v-model="slide" arrows navigation infinite>
+            <template v-for="(items, index) in aboutData.gallery" :key="items">
+              <q-carousel-slide :name="index" :img-src="items.image_url" />
+            </template>
+          </q-carousel>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <!-- End About Us Section -->
+
     <div class="cfooter gt-sm">
       <div class="row justify-center q-pa-md gt-xs">
         <div class="col-md-9 col-12">
@@ -337,10 +365,10 @@
         </div>
         <!-- col -->
       </div>
-      <!-- row -->
+      <!-- row
 
       <q-separator />
-      <Footer ref="footer"></Footer>
+      <Footer ref="footer"></Footer>-->
     </div>
     <!-- cfooter -->
     <LoaderComponents></LoaderComponents>
@@ -361,7 +389,6 @@ import { useSettingsStore } from "stores/SettingsStore";
 export default {
   name: "MainLayout",
   components: {
-    // Cart: defineAsyncComponent(() => import('components/Cart')),
     CartDrawer: defineAsyncComponent(() => import("components/CartDrawer")),
     Subscribe: defineAsyncComponent(() => import("components/Subscribe")),
     FooterApp: defineAsyncComponent(() => import("components/FooterApp")),
@@ -390,18 +417,21 @@ export default {
       is_login: false,
       avatar: "",
       first_name: "",
-      q: "",
-      awaitingSearch: false,
       mobile_tabmenu: "home",
       rtl: false,
+      loading: true,
+      aboutData: [],
+      carousel: false,
+      slide: 0,
     };
   },
   created() {
     this.rtl = this.DataStorePersisted.rtl;
+    this.getInfo();
   },
   mounted() {
     this.path = this.$route.path;
-    if (this.$route.path === "/menu") {
+    if (this.$route.path === "/" || this.$route.path === "/home") {
       if (this.$q.screen.gt.sm) {
         this.cart_drawer = true;
         this.is_overlay = false;
@@ -419,15 +449,10 @@ export default {
 
     this.path = this.$route.path;
     this.is_overlay = true;
-    if (this.$route.path === "/menu") {
+    if (this.$route.path === "/" || this.$route.path === "/home") {
       if (this.$q.screen.gt.sm) {
         this.cart_drawer = true;
         this.is_overlay = false;
-      }
-      if (this.$route.params.addcart === "true") {
-        if (this.$refs.cart) {
-          this.$refs.cart.refreshCart();
-        }
       }
     } else if (this.$route.path === "/account/trackorder") {
       if (this.$refs.cart) {
@@ -445,42 +470,11 @@ export default {
       }
       return true;
     },
-  },
-  watch: {
-    q(newdata, oldata) {
-      if (!this.awaitingSearch) {
-        if (
-          typeof this.q === "undefined" ||
-          this.q === null ||
-          this.q === "" ||
-          this.q === "null" ||
-          this.q === "undefined"
-        ) {
-          return false;
-        }
-        setTimeout(() => {
-          this.awaitingSearch = false;
-          this.$router.push({ name: "menusearch", params: { q: this.q } });
-        }, 1000); // 1 sec delay
+    hasData() {
+      if (Object.keys(this.aboutData).length > 0) {
+        return true;
       }
-      this.awaitingSearch = true;
-    },
-    rtl(newval, oldval) {
-      console.log("=>" + newval);
-      this.DataStorePersisted.rtl = newval;
-      this.$q.lang.set({ rtl: newval });
-    },
-    SettingsStore: {
-      immediate: true,
-      deep: true,
-      handler(newValue, oldValue) {
-        if (
-          !newValue.loading_settings &&
-          !APIinterface.empty(newValue.booking_status_list)
-        ) {
-          this.DataStorePersisted.booking_status_list = newValue.booking_status_list;
-        }
-      },
+      return false;
     },
   },
   methods: {
@@ -568,9 +562,83 @@ export default {
         });
       }
     },
-    //
+    getInfo() {
+      this.loading = true;
+      APIinterface.fetchDataPost("getInfo", "")
+        .then((data) => {
+          this.aboutData = data.details;
+        })
+        .catch((error) => {
+          console.error("Error fetching about info:", error);
+        })
+        .then(() => {
+          this.loading = false;
+        });
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.featured-header {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-top: 50px;
+  z-index: 1;
+}
+
+.featured-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.restaurant-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+
+  h1 {
+    color: white;
+    margin: 0;
+    padding: 0 20px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.dimmed {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+  }
+}
+
+.cart-drawer {
+  z-index: 2001;
+}
+</style>

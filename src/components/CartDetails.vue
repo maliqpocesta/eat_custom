@@ -57,7 +57,7 @@
   <DIV v-else>
     <template v-if="items_count > 0">
       <template v-if="viewMerchantInfo">
-        <div class="row q-mb-sm">
+        <!--div class="row q-mb-sm">
           <div class="col-3">
             <q-avatar>
               <img :src="cart_merchant.logo" />
@@ -73,7 +73,7 @@
             />
             <p class="font11 ellipsis-2-lines">{{ cart_merchant.address }}</p>
           </div>
-        </div>
+        </div-->
         <q-separator />
       </template>
 

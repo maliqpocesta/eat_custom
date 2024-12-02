@@ -48,7 +48,6 @@
       </template>
     </q-toolbar>
   </q-page-sticky>
-  <div class="q-pa-xs-md q-pa-md-lg"></div>
   {{ cat_dialog }}
 </template>
 

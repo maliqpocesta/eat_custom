@@ -187,180 +187,66 @@
             </template>
             <template v-else>
               <div class="row fit justify-start items-center q-col-gutter-md">
-                <!-- item col -->
-                <template v-for="items_id in category.items" :key="items_id">
-                  <div
-                    v-if="data_items[items_id]"
-                    class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
-                  >
-                    <q-card flat bordered="false">
-                      <q-item>
-                        <!--q-item-section class="relative-position">
-                          <div
-                            v-if="data_items[items_id].dish"
-                            class="absolute-bottom flex justify-end q-mb-xs q-mr-xs q-gutter-x-xs"
-                            style="z-index: 1"
-                          >
-                            <template
-                              v-for="dish_id in data_items[items_id].dish"
-                              :key="dish_id"
-                            >
-                              <template v-if="dish[dish_id]">
-                                <q-avatar
-                                  size="md"
-                                  style="border: 2px solid white"
-                                  class="bg-yellow-9"
-                                >
-                                  <img :src="dish[dish_id].url_image" />
-                                </q-avatar>
-                              </template>
-                            </template>
-                          </div>
-                          <q-img
-                            :src="data_items[items_id].url_image"
-                            style="height: 120px"
-                            loading="lazy"
-                            fit="cover"
-                            class="full-width"
-                            spinner-color="warning"
-                            spinner-size="sm"
-                          ></q-img>
-                        </q-item-section-->
-                        <q-item-section top v-if="this.$q.screen.lt.sm">
-                          <q-item-label class="ellipsis-2-lines">
-                            <span v-html="data_items[items_id].item_name"></span>
-                          </q-item-label>
-                          <q-item-label caption class="ellipsis-2-lines"
-                            ><span v-html="data_items[items_id].item_description"></span
-                          ></q-item-label>
+  <template v-for="items_id in category.items" :key="items_id">
+    <div v-if="data_items[items_id]" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <q-card flat bordered="false">
+        <!-- Name and Button Row -->
+        <q-item>
+          <q-item-section class="col-9">
+            <q-item-label class="ellipsis-2-lines">
+              <span v-html="data_items[items_id].item_name"></span>
+            </q-item-label>
+          </q-item-section>
 
-                          <q-item-label>
-                            <template v-if="data_items[items_id].price[0]">
-                              <template
-                                v-if="data_items[items_id].price[0].discount <= 0"
-                              >
-                                <span class="q-mr-sm"
-                                  >{{ data_items[items_id].price[0].size_name }}
-                                  {{ data_items[items_id].price[0].pretty_price }}</span
-                                >
-                              </template>
-                              <template v-else>
-                                <span class="q-mr-s zm"
-                                  >{{ data_items[items_id].price[0].size_name }}
-                                  <del class="text-grey">{{
-                                    data_items[items_id].price[0].pretty_price
-                                  }}</del>
-                                  {{
-                                    data_items[items_id].price[0]
-                                      .pretty_price_after_discount
-                                  }}</span
-                                >
-                              </template>
-                            </template>
-                          </q-item-label>
-                          <q-item-label v-if="data_items[items_id].total_allergens > 0">
-                            <q-btn
-                              round
-                              unelevated
-                              color="mygrey"
-                              text-color="dark"
-                              size="sm"
-                              icon="o_info"
-                              @click.stop="showAllergens(items_id)"
-                            />
-                          </q-item-label>
-                        </q-item-section>
-                      </q-item>
-                      <q-item v-if="!this.$q.screen.lt.sm">
-                        <q-item-section>
-                          <q-item-label class="ellipsis-2-lines">
-                            <span v-html="data_items[items_id].item_name"></span>
-                          </q-item-label>
-                        </q-item-section>
-                        <q-item-section
-                          side
-                          v-if="data_items[items_id].total_allergens > 0"
-                        >
-                          <q-btn
-                            round
-                            unelevated
-                            color="mygrey"
-                            text-color="dark"
-                            size="sm"
-                            icon="o_info"
-                            @click.stop="showAllergens(items_id)"
-                          />
-                        </q-item-section>
-                      </q-item>
-                      <q-item v-if="!this.$q.screen.lt.sm" class="item-min-height">
-                        <q-item-section>
-                          <q-item-label caption class="ellipsis-2-lines"
-                            ><span v-html="data_items[items_id].item_description"></span
-                          ></q-item-label>
-                        </q-item-section>
-                      </q-item>
-                      <q-item v-if="!this.$q.screen.lt.sm" class="item-min-height">
-                        <q-item-section>
-                          <template v-if="data_items[items_id].price[0]">
-                            <template v-if="data_items[items_id].price[0].discount <= 0">
-                              <span class="q-mr-sm"
-                                >{{ data_items[items_id].price[0].size_name }}
-                                {{ data_items[items_id].price[0].pretty_price }}</span
-                              >
-                            </template>
-                            <template v-else>
-                              <span class="q-mr-s zm"
-                                >{{ data_items[items_id].price[0].size_name }}
-                                <del class="text-grey">{{
-                                  data_items[items_id].price[0].pretty_price
-                                }}</del>
-                                {{
-                                  data_items[items_id].price[0]
-                                    .pretty_price_after_discount
-                                }}</span
-                              >
-                            </template>
-                          </template>
-                        </q-item-section>
-                      </q-item>
-                      <q-item>
-                        <q-item-section>
-                          <q-btn
-                            unelevated
-                            rounded
-                            :color="
-                              itemAvailable(items_id, category.cat_id)
-                                ? 'warning'
-                                : 'grey-3'
-                            "
-                            :disable="
-                              itemAvailable(items_id, category.cat_id) ? false : true
-                            "
-                            text-color="black"
-                            no-caps
-                            class="full-width"
-                            :label="
-                              itemAvailable(items_id, category.cat_id)
-                                ? $t('Add to cart')
-                                : $t('Not available')
-                            "
-                            @click.stop="
-                              ShowItems(
-                                data_items[items_id].slug,
-                                category.cat_id,
-                                data_items[items_id].item_uuid
-                              )
-                            "
-                          >
-                          </q-btn>
-                        </q-item-section>
-                      </q-item>
-                    </q-card>
-                  </div>
-                </template>
-                <!-- col  -->
-                <!-- item col -->
-              </div>
+          <q-item-section class="col-3">
+            <q-btn
+              unelevated
+              rounded
+              :color="itemAvailable(items_id, category.cat_id) ? 'warning' : 'grey-3'"
+              :disable="itemAvailable(items_id, category.cat_id) ? false : true"
+              text-color="black"
+              no-caps
+              size="sm"
+              class="full-width"
+              :label="itemAvailable(items_id, category.cat_id) ? $t('Add to cart') : $t('Not available')"
+              @click.stop="ShowItems(data_items[items_id].slug, category.cat_id, data_items[items_id].item_uuid)"
+            />
+          </q-item-section>
+        </q-item>
+
+        <!-- Description -->
+        <q-item class="item-min-height">
+          <q-item-section>
+            <q-item-label caption class="ellipsis-2-lines">
+              <span v-html="data_items[items_id].item_description"></span>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <!-- Price Section -->
+        <q-item class="item-min-height">
+          <q-item-section>
+            <template v-if="data_items[items_id].price[0]">
+              <template v-if="data_items[items_id].price[0].discount <= 0">
+                <span class="q-mr-sm">
+                  {{ data_items[items_id].price[0].size_name }}
+                  {{ data_items[items_id].price[0].pretty_price }}
+                </span>
+              </template>
+              <template v-else>
+                <span class="q-mr-sm">
+                  {{ data_items[items_id].price[0].size_name }}
+                  <del class="text-grey">{{ data_items[items_id].price[0].pretty_price }}</del>
+                  {{ data_items[items_id].price[0].pretty_price_after_discount }}
+                </span>
+              </template>
+            </template>
+          </q-item-section>
+        </q-item>
+      </q-card>
+    </div>
+  </template>
+</div>
               <!-- row  -->
             </template>
           </section>

@@ -1,4 +1,3 @@
-
 const routes = [
   {
     path: '/',
@@ -6,7 +5,6 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/Home.vue') },
       { path: 'home', component: () => import('pages/Home.vue') },
-      { path: 'orders', component: () => import('pages/Orders.vue'), meta: { requiresAuth: true } },
       { path: 'signup', component: () => import('pages/Signup.vue') },
       { path: 'guest', component: () => import('pages/GuestSignup.vue') },
       { path: 'login', component: () => import('pages/Login.vue') },
@@ -15,15 +13,7 @@ const routes = [
       { path: 'location', component: () => import('pages/Location.vue') },
       { path: 'checkout', component: () => import('pages/Checkout.vue'), meta: { requiresAuth: true } },
       { path: 'cart', name: 'cart', component: () => import('pages/CartPage.vue') },
-      { path: 'page/:slug', name: 'page', props: true, component: () => import('pages/CustomPage.vue') }
-    ]
-  },
-  {
-    path: '/menu',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', name: 'menu', props: true, component: () => import('pages/Menu.vue') },
-      { path: 'search', name: 'menusearch', props: true, component: () => import('pages/SearchProduct.vue') },
+      { path: 'page/:slug', name: 'page', props: true, component: () => import('pages/CustomPage.vue') },
       { path: 'product/:slug/:cat_id/:item_uuid', name: 'product', props: true, component: () => import('pages/Product.vue') }
     ]
   },
@@ -61,14 +51,6 @@ const routes = [
   },
 
   {
-    path: '/about',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/AboutUs.vue') }
-    ]
-  },
-
-  {
     path: '/reservation',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -78,8 +60,6 @@ const routes = [
       { path: 'update', name : 'reservation-update', component: () => import('pages/TableReservation.vue') }
     ]
   },
-
-
 
   // Always leave this as last one,
   // but you can also remove it

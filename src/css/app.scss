@@ -185,6 +185,10 @@ right: 10px !important;
   color: #856404;
 }
 
+.q-card1{
+  background-color: #e2e2e2;
+}
+
 .text-cnavigation
 {
   color: #000 !important;
@@ -268,8 +272,31 @@ background: $warning;
   background: #f9e7b5;
 }
 
+.cart-drawer {
+  z-index: 2000; // Higher than footer
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+
 .cfooter{
-  background-color: #fff;
+  z-index: 1000;
+  position: relative;
+  background-color: #e2e2e2;
+}
+
+.q-page-container {
+  min-height: 100vh;
+  padding-bottom: 60px; // Add space for footer
+  position: relative;
+  z-index: 1;
+}
+
+.cart-scroll {
+  height: calc(100vh - 50px); // Adjust based on header height
+  .q-scrollarea__content {
+    padding-bottom: 120px; // Extra space at bottom of cart
+  }
 }
 
 .cfooter .q-item{
